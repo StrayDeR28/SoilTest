@@ -229,7 +229,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 141818309}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 39.93, y: 10.37, z: -5.72}
+  m_LocalPosition: {x: 39.93, y: 8.26, z: -5.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -620,6 +620,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf22ce3f5fc3ed1478ba544fa9aeb902, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minerals: 0
+  mineralsConsumptionPerHour: 5
   consumptionModifier: 2
   connection: 0
   rootsCenter: {x: 0, y: 0, z: 0}
@@ -813,7 +815,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391480348}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 39.32, y: 9.077, z: 2.08}
+  m_LocalPosition: {x: 39.32, y: 7.88, z: -3.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
