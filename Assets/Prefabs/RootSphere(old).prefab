@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5509703593179402605}
   - component: {fileID: -2505788299241669131}
   m_Layer: 0
-  m_Name: RootSphere
+  m_Name: RootSphere(old)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
