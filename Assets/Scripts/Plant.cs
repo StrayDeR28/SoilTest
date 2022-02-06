@@ -24,19 +24,44 @@ public class Plant : MonoBehaviour
     List<float> C = new List<float>();//создаем список объёма потребления для растения X
     List<float> A = new List<float>();//создаем список значений доступных минералов
 
-    int iEll=0;//итератор для метода FertilizngAlgorithm
+    int iEll = 0;//итератор для метода CreatingLists - общий, дабы считать листы корректно
+    public float timeRemaining = 10; //время для питания растения
     void Start()
     {
-        
+
     }
-    private void OnDrawGizmosSelected()//отрисовка сферы
+    private void OnDrawGizmosSelected()//отрисовка OverlapSphere для rootsSystem
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(rootsCenter, rootsRadius);
     }
-    private void FertilizingAlgorithm(Fertilizer x)
+    private void CheckForFertilizers()//метод, служащий для поиска fertilizers (в нужный промежуток времени)
     {
-        connection = Mathf.Sqrt(Mathf.Pow((rootsCenter.x - x.transform.position.x), 2) + Mathf.Pow((rootsCenter.y - x.transform.position.y), 2) + Mathf.Pow((rootsCenter.z - x.transform.position.z), 2)) - x.radius - rootsRadius;//раньше было fert
+        iEll = 0;
+        F.Clear();
+        Collider[] hitColliders = Physics.OverlapSphere(rootsCenter, rootsRadius, rootsLayerMask);//массив коллайдеров, пересёкщихся с OverlapSphere. По-идее это переменная rootsSystem
+        foreach (var iter in hitColliders)
+        {
+            GameObject iterObjectHit = iter.gameObject;
+            if (iterObjectHit != null)
+            {
+                if (iterObjectHit.GetComponent<Fertilizer>() != null)//выбираем только те объекты, которые имеют данный класс
+                {
+                    F.Add(iterObjectHit.GetComponent<Fertilizer>());//внесли очередной ферт.
+                }
+            }
+        }
+        for (int i = 0; i < F.Count; i++)//от сюда формируем список пересекщихся fert в данный промежуток времени (mineralsCPH)
+        {
+            print(F[i].mineralsReserve + " " + F[i].radius);//вывод значений fertilizers 
+            print("Count " + F.Count);
+            CreatingLists(F[i]);//создаем List-ы данных для фертов
+            iEll += 1;//итератор для метода CreatingLists, значения совпадают с порядком эл. в списке
+        }
+    }
+    public void CreatingLists(Fertilizer x)
+    {
+        connection = Mathf.Sqrt(Mathf.Pow((rootsCenter.x - x.transform.position.x), 2) + Mathf.Pow((rootsCenter.y - x.transform.position.y), 2) + Mathf.Pow((rootsCenter.z - x.transform.position.z), 2)) - x.radius - rootsRadius;
         if (connection < 0)
         {
             connection = Mathf.Abs(connection);
@@ -46,54 +71,59 @@ public class Plant : MonoBehaviour
             connection = 0;
         }
         Fc.Add(connection);//заполняем список connection
-        print("connection " + Fc[iEll]);//аналогично как и для print F
+        print("connection " + Fc[iEll]);//проверка, удалить в фин. версии
         C.Add(connection * consumptionModifier);//создаем список объёма потребления для растения X
-        print("multiplied connection " + C[iEll]);//аналогично как и для print F
-        float reserve = x.mineralsReserve;//было fert
+        print("multiplied connection " + C[iEll]);//проверка, удалить в фин. версии
+        float reserve = x.mineralsReserve;
         if (connection * consumptionModifier >= reserve)//смотрим уже на элемент из листа C
         {
             A.Add(reserve);
         }
         else
         {
-            A.Add(connection * consumptionModifier);
+            A.Add(connection * consumptionModifier);//совпадает с значением из C, можно переписать
         }
-        print("A " + A[iEll]);//аналогично как и для print F
+        print("A " + A[iEll]);//проверка, удалить в фин. версии
+        if (A.Count == F.Count)//когда заполним наши List-ы данных для всех пересеченных fert., вызовём алгоритм, считающий потребление minerals и тд
+        {
+            FertilizingAlgorithm();
+        }
+    }
+    private void FertilizingAlgorithm()
+    {
         float summ = 0;
         foreach (float a in A)// тут избавиться от повторного вывода не получилось
         {
             summ += a;//находим сумму всех a из A
             print("summ " + summ);
         }
+
         if ((summ > mineralsConsumptionPerHour) & (summ < 2 * mineralsConsumptionPerHour))//Шаг 4, пункт 1
         {
             minerals += summ;//шаг 5
             int i = 0;
             foreach (Fertilizer iter in F)
             {
-                F[i].mineralsReserve -= A[i];//должно работать, но при удалении фертилайзера со сцены скорее всего всё полетит. Изменения происходят только в листе, не на самом объекте
-                if (F[i].mineralsReserve == 0)//когда запас иссякнет, изменим A[i] на ноль. Потом решить это удаленим фертилайзера
+                F[i].mineralsReserve -= A[i];//
+                if (F[i].mineralsReserve == 0)//когда запас иссякнет, изменим A[i] на ноль. Потом добавить и удаление фертилайзера
                 {
                     A[i] = F[i].mineralsReserve;
                 } 
-                //F[i].GetComponent<Fertilizer>().mineralsReserve -= A[i];
                 i += 1;
             }
             summ = 0;//обнулим сумму, пересчитаем её заново
             foreach (float a in A)//обновляем сумму
             {
-                summ += a;//находим сумму всех a из A
+                summ += a;
                 print("new summ " + summ);
             }
         }
-        else if (summ > 2 * mineralsConsumptionPerHour)
+        else if (summ > 2 * mineralsConsumptionPerHour)//Шаг 4, пункт 2
         {
-            int i = 0;
             int j = 0;
-            foreach (float a in A)//шаг 5
+            for (int i= 0; i < A.Count; i++)//перезаполняем элементы листа A
             {
-                A[i] = a / (summ / (2 * mineralsConsumptionPerHour));//должно работать, но при удалении фертилайзера со сцены скорее всего всё полетит
-                i += 1;
+                A[i] = A[i] / (summ / (2 * mineralsConsumptionPerHour));
             }
             summ = 0;//обнулим сумму, пересчитаем её заново
             foreach (float a in A)// тут избавиться от повторного вывода не получилось. Известно, что по формуле сумма будет равна 2*minCPH, но посчитаем на всякий
@@ -104,51 +134,35 @@ public class Plant : MonoBehaviour
             minerals += summ;//шаг 5
             foreach (Fertilizer iter in F)
             {
-                F[j].mineralsReserve -= A[j];//должно работать, но при удалении фертилайзера со сцены скорее всего всё полетит
-                if (F[j].mineralsReserve == 0)//когда запас иссякнет, изменим A[i] на ноль. Потом решить это удаленим фертилайзера
+                F[j].mineralsReserve -= A[j];
+                if (F[j].mineralsReserve == 0)
                 {
                     A[j] = F[j].mineralsReserve;
                 }
                 j += 1;
             }
-            foreach (float a in A)//обновляем сумму
-            {
-                summ += a;//находим сумму всех a из A
-                print("new summ " + summ);
-            }
+            summ = 0;
         }
-        else if (summ < mineralsConsumptionPerHour)
+        else if (summ < mineralsConsumptionPerHour)//Шаг 4, пункт 3
         {
             print("пока ничего, тут шаг 4 пункт 3");
         }
+        A.Clear();
+        Fc.Clear();
+        C.Clear();
     }
     // Update is called once per frame
     void Update()
     {
         rootsCenter = transform.position;
-        Collider[] hitColliders = Physics.OverlapSphere(rootsCenter, rootsRadius, rootsLayerMask);//массив пересеченных какашек. По-идее это переменная rootsSystem
-        foreach (var iter in hitColliders)
+        if (timeRemaining > 0)
         {
-            GameObject iterObjectHit = iter.gameObject;
-            if (iterObjectHit != null)
-            {
-                if (iterObjectHit.GetComponent<Fertilizer>() != null)//выбираем только те объекты, которые имеют данный класс
-                {
-                    if (iterObjectHit.GetComponent<Fertilizer>().flagofusage == 0)//проверка на единственность использования объекта
-                    {
-                        F.Add(iterObjectHit.GetComponent<Fertilizer>());//внесли очередной ферт.
-                        print(F[iEll].mineralsReserve + " " + F[iEll].radius);//вывод не всех элементов списка. Будет работать правильно пока не будут удалены элементы списка. В будущем вохможно изменить на foreach
-                        //while (iterObjectHit.GetComponent<Fertilizer>().mineralsReserve > 0)
-                        //{
-                        //    iterObjectHit.GetComponent<Fertilizer>().mineralsReserve += -2;
-                        //}
-                        iterObjectHit.GetComponent<Fertilizer>().flagofusage = 1;//надо подумать, как это ограничить. Если убрать, бесконечно вписываем в лист 
-                        print("Count " + F.Count);
-                        FertilizingAlgorithm(F[iEll]);
-                        iEll += 1;//итератор для метода сверху, значения совпадают с порядком эл. в списке
-                    }
-                }
-            }
+            timeRemaining -= Time.deltaTime;
+        }
+        else
+        {
+            CheckForFertilizers();
+            timeRemaining = 10;
         }
     }
 }
