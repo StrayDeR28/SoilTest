@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Fertilizer : MonoBehaviour
 {
-    //SoilFormation: MySoilFormationRef
+    public SoilFormation MySoilFormationRef;
     public float mineralsReserve;
     public float radius;
+    public Transform transformm;
     public Fertilizer(float newmineralsReserve, float newradius)
     {
         mineralsReserve = newmineralsReserve;

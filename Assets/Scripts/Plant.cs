@@ -146,6 +146,8 @@ public class Plant : MonoBehaviour
         else if (summ < mineralsConsumptionPerHour)//Шаг 4, пункт 3
         {
             print("пока ничего, тут шаг 4 пункт 3");
+            //DepletionCreator Dpc = new DepletionCreator();
+            //Dpc.CreateDepletionSphere( rootsCenter, rootsRadius);
         }
         A.Clear();
         Fc.Clear();
