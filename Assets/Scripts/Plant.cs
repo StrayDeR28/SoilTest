@@ -12,6 +12,7 @@ public class Plant : MonoBehaviour
     //public float waterConsumptionRate;
     //public float mineralsPerStage;
     //public Depletion depletion;
+    private DepletionCreator Dpc;//указание на класс 
 
     public float consumptionModifier;//надо менять в зависмости от растения. Решается разными префабами
     public float connection;
@@ -51,15 +52,22 @@ public class Plant : MonoBehaviour
                 }
             }
         }
-        for (int i = 0; i < F.Count; i++)//от сюда формируем список пересекщихся fert в данный промежуток времени (mineralsCPH)
+        if (F.Count > 0)
         {
-            print(F[i].mineralsReserve + " " + F[i].radius);//вывод значений fertilizers 
-            print("Count " + F.Count);
-            CreatingLists(F[i]);//создаем List-ы данных для фертов
-            iEll += 1;//итератор для метода CreatingLists, значения совпадают с порядком эл. в списке
+            for (int i = 0; i < F.Count; i++)//от сюда формируем список пересекщихся fert в данный промежуток времени (mineralsCPH)
+            {
+                print(F[i].mineralsReserve + " " + F[i].radius);//вывод значений fertilizers 
+                print("Count " + F.Count);
+                CreatingLists(F[i]);//создаем List-ы данных для фертов
+                iEll += 1;//итератор для метода CreatingLists, значения совпадают с порядком эл. в списке
+            }
+        }
+        else
+        {
+            FertilizingAlgorithm();
         }
     }
-    public void CreatingLists(Fertilizer x)
+    public void CreatingLists(Fertilizer x)//алгоритм заполнения списков удобрений (fertilizers)
     {
         connection = Mathf.Sqrt(Mathf.Pow((rootsCenter.x - x.transform.position.x), 2) + Mathf.Pow((rootsCenter.y - x.transform.position.y), 2) + Mathf.Pow((rootsCenter.z - x.transform.position.z), 2)) - x.radius - rootsRadius;
         if (connection < 0)
@@ -89,7 +97,7 @@ public class Plant : MonoBehaviour
             FertilizingAlgorithm();
         }
     }
-    private void FertilizingAlgorithm()
+    private void FertilizingAlgorithm()//алгоритм потребления растения удобрений (mierals)
     {
         float summ = 0;
         foreach (float a in A)// тут избавиться от повторного вывода не получилось
@@ -143,9 +151,10 @@ public class Plant : MonoBehaviour
             }
             summ = 0;
         }
-        else if (summ < mineralsConsumptionPerHour)//Шаг 4, пункт 3
+        else if (summ < mineralsConsumptionPerHour)//Шаг 4, пункт 3. Для единственности Depletion для каждого Plant добавить флаг проверки (1,0)
         {
-            print("пока ничего, тут шаг 4 пункт 3");
+            Dpc = GameObject.Find("DepletionHolder").GetComponent<DepletionCreator>();// попробовать перенсти в корень класса
+            Dpc.CreateDepletionSphere( rootsCenter, rootsRadius);
         }
         A.Clear();
         Fc.Clear();
@@ -154,8 +163,8 @@ public class Plant : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rootsCenter = transform.position;
-        if (timeRemaining > 0)
+        rootsCenter = transform.position;//в будущем убрать т.к. корни неподвижны, пока для теста
+        if (timeRemaining > 0)//таймер для получения растением удобрений
         {
             timeRemaining -= Time.deltaTime;
         }
