@@ -328,8 +328,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 903550863f6e8534481e30f9f2cbcda9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radiusOfDep: 0
-  centerOfDep: 0
   DepSphere: {fileID: 1384017063}
 --- !u!4 &1116907401
 Transform:
@@ -358,7 +356,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.144
+      value: 9.02
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -402,7 +400,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245073, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: mineralsReserve
-      value: 2
+      value: 4.2
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245073, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: MySoilFormationRef
@@ -412,6 +410,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fertilizer
       objectReference: {fileID: 0}
+    - target: {fileID: 2307906450811245102, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8021911a61c441c45813dc969700bc21, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
 --- !u!1 &1384017058 stripped
@@ -431,6 +433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3039cf7b18269614a82dd7461ecc249a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MySoilFormationRef: {fileID: 0}
 --- !u!4 &1384017063 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2597021656371731958, guid: 286832836c2fc9246bbe73536a5d632e, type: 3}
@@ -502,7 +505,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: f99f9cf42a3a62a4f81fa968f4bf3429, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -559,15 +562,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.84
+      value: 1.65
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.97
+      value: 1.39
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.86
+      value: -5.6
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -598,6 +601,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245073, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
+      propertyPath: mineralsReserve
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307906450811245073, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: MySoilFormationRef
       value: 
       objectReference: {fileID: 1433461372}
@@ -605,6 +612,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fertilizer (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2307906450811245102, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8021911a61c441c45813dc969700bc21, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
 --- !u!1001 &507699048867476105
@@ -628,7 +639,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2597021656371731958, guid: 286832836c2fc9246bbe73536a5d632e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10.045357
+      value: 1.03
       objectReference: {fileID: 0}
     - target: {fileID: 2597021656371731958, guid: 286832836c2fc9246bbe73536a5d632e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -666,7 +677,8 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -4361931737715697624, guid: 286832836c2fc9246bbe73536a5d632e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 286832836c2fc9246bbe73536a5d632e, type: 3}
 --- !u!1001 &3688581901268163954
 PrefabInstance:
@@ -723,5 +735,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3688581902294982119, guid: b08a294e7224369418e834f99b0b4d09, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a4d8ce3c856b9fe4dbab42905ed7495e, type: 2}
+    - target: {fileID: 3688581902294982122, guid: b08a294e7224369418e834f99b0b4d09, type: 3}
+      propertyPath: Dpc
+      value: 
+      objectReference: {fileID: 1116907400}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b08a294e7224369418e834f99b0b4d09, type: 3}

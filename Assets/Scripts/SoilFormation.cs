@@ -12,6 +12,11 @@ public class SoilFormation : MonoBehaviour
         
     }
 
+    public void GetSoilFormationRef()
+    {
+
+    }
+
     // Update is called once per frame
     void Update()
     {

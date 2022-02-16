@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a4d8ce3c856b9fe4dbab42905ed7495e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -110,6 +110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minerals: 0
   mineralsConsumptionPerHour: 4
+  Dpc: {fileID: 0}
   consumptionModifier: 2
   connection: 0
   rootsCenter: {x: 0, y: 0, z: 0}
