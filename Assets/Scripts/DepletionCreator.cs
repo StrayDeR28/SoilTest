@@ -10,9 +10,10 @@ public class DepletionCreator : MonoBehaviour
     private Depletion Dp;
     public void CreateDepletionSphere(Vector3 newCenterOfDep, float newRadiusOfDep)
     {
-        Instantiate(DepSphere, newCenterOfDep, Quaternion.identity);
         Dp = GameObject.Find("DepletionSphere").GetComponent<Depletion>();
-        Dp.SetParameters(newRadiusOfDep);
+        Dp.gameObject.GetComponent<SphereCollider>().radius = newRadiusOfDep;//всё становится проблемой из-за этого. т.к. у нас везде find будут меняться все depsph на сцене, надо это фиксить
+        print(Dp.gameObject.GetComponent<SphereCollider>().radius);
+        Instantiate(DepSphere, newCenterOfDep, Quaternion.identity);
     }
     // Start is called before the first frame update
     void Start()
