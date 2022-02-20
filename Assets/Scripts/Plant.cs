@@ -19,14 +19,18 @@ public class Plant : MonoBehaviour
     public Vector3 rootsCenter;//для rootsSystem
     public float rootsRadius;//для rootsSystem
     public LayerMask rootsLayerMask;//для rootsSystem
+    public LayerMask depletionLayerMask;
+
 
     List<Fertilizer> F = new List<Fertilizer>();//создаем cписок пересекающихся с растением X fertilizers 
     List<float> Fc = new List<float>();//создаем список connection-ов для растения X
     List<float> C = new List<float>();//создаем список объёма потребления для растения X
     List<float> A = new List<float>();//создаем список значений доступных минералов
+    List<Depletion> DPL = new List<Depletion>();//лист для Depletion (по логике деплишн всегда один и лист не нужен,  но пока так)
 
     int iEll = 0;//итератор для метода CreatingLists - общий, дабы считать листы корректно
     public float timeRemaining = 10; //время для питания растения
+    [SerializeField] private int flag = 1;//флаг для пункта 4.3
     void Start()
     {
 
@@ -113,7 +117,7 @@ public class Plant : MonoBehaviour
             foreach (Fertilizer iter in F)
             {
                 F[i].mineralsReserve -= A[i];//
-                if (F[i].mineralsReserve == 0)//когда запас иссякнет, изменим A[i] на ноль. Потом добавить и удаление фертилайзера
+                if (F[i].mineralsReserve == 0)//когда запас иссякнет, изменим A[i] на ноль.
                 {
                     A[i] = F[i].mineralsReserve;
                 } 
@@ -153,8 +157,76 @@ public class Plant : MonoBehaviour
         }
         else if (summ < mineralsConsumptionPerHour)//Шаг 4, пункт 3. Для единственности Depletion для каждого Plant добавить флаг проверки (1,0)
         {
-            Dpc = GameObject.Find("DepletionHolder").GetComponent<DepletionCreator>();// попробовать перенсти в корень класса
-            Dpc.CreateDepletionSphere( rootsCenter, rootsRadius);
+            if (flag == 0)
+            {
+                int z = 0;
+                foreach (Depletion iter in DPL)// Хз почему ошибка
+                {
+                    DPL[z].mineralsLack -= 2;
+                    if (DPL[z].mineralsLack <= 0)
+                    {
+                        flag = 1;
+                        DPL[z].Destroyer();//если не сработает - вызвать дестройер из деплишн. Короче всё работает, нужен нормальный дестройер
+                        //DPL.Clear();//еще раз видно, что лист не нужен, но пока так
+                    }
+                    z += 1;
+                }
+            }
+            if (flag == 1)
+            {
+                Dpc = GameObject.Find("DepletionHolder").GetComponent<DepletionCreator>();// попробовать перенсти в корень класса
+                Dpc.CreateDepletionSphere(rootsCenter, rootsRadius);
+                Collider[] hitColliders = Physics.OverlapSphere(rootsCenter, rootsRadius, depletionLayerMask);// оверлап сфера для поиска деплишн
+                foreach (var iter in hitColliders)
+                {
+                    GameObject iterObjectHit = iter.gameObject;
+                    if (iterObjectHit != null)
+                    {
+                        if (iterObjectHit.GetComponent<Depletion>() != null)//выбираем только те объекты, которые имеют данный класс
+                        {
+                            DPL.Add(iterObjectHit.GetComponent<Depletion>());//внесли очередной деп.
+                        }
+                    }
+                }
+            }
+            int i = 0;
+            foreach (Depletion itr in DPL)//Вычисления для шага 4.3
+            {
+                if (DPL[i].lackMaximum >= mineralsConsumptionPerHour + DPL[i].mineralsLack)
+                {
+                    minerals += mineralsConsumptionPerHour;
+                    if ((mineralsConsumptionPerHour - summ) <= DPL[i].lackMaximum)
+                    {
+                        DPL[i].mineralsLack += (mineralsConsumptionPerHour - summ);
+                    }
+                    else
+                    {
+                        DPL[i].mineralsLack += DPL[i].lackMaximum;
+                    }
+                }
+                else
+                {
+                    print("mineralsCPH+mineralsLack is more then Maximum ");
+                }
+                i += 1;
+            }
+            int j = 0;
+            foreach (Fertilizer iter in F)
+            {
+                F[j].mineralsReserve -= A[j];//
+                if (F[j].mineralsReserve == 0)//когда запас иссякнет, изменим A[i] на ноль.
+                {
+                    A[j] = F[j].mineralsReserve;
+                }
+                j += 1;
+            }
+            summ = 0;//обнулим сумму, пересчитаем её заново
+            foreach (float a in A)//обновляем сумму
+            {
+                summ += a;
+                print("new summ " + summ);
+            }
+            flag = 0;//флаг для пункта 4.3
         }
         A.Clear();
         Fc.Clear();
