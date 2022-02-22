@@ -130,6 +130,21 @@ public class Plant : MonoBehaviour
                 print("new summ " + summ);
             }
         }
+        if (flag == 0)//алгоритм саморегенарации/удаления Depletion11111111111111111
+        {
+            int z = 0;
+            foreach (Depletion iter in DPL)// Хз почему ошибка
+            {
+                DPL[z].mineralsLack -= 2;
+                if (DPL[z].mineralsLack <= 0)
+                {
+                    flag = 1;
+                    DPL[z].Destroyer();//если не сработает - вызвать дестройер из деплишн. Короче всё работает, нужен нормальный дестройер
+                    print("Count when destroying " + DPL.Count);//проверка
+                }
+                z += 1;
+            }
+        }
         else if (summ > 2 * mineralsConsumptionPerHour)//Шаг 4, пункт 2
         {
             int j = 0;
@@ -154,10 +169,7 @@ public class Plant : MonoBehaviour
                 j += 1;
             }
             summ = 0;
-        }
-        else if (summ < mineralsConsumptionPerHour)//Шаг 4, пункт 3. Для единственности Depletion для каждого Plant добавить флаг проверки (1,0)
-        {
-            if (flag == 0)
+            if (flag == 0)//алгоритм саморегенарации/удаления Depletion11111111111111111
             {
                 int z = 0;
                 foreach (Depletion iter in DPL)// Хз почему ошибка
@@ -167,9 +179,27 @@ public class Plant : MonoBehaviour
                     {
                         flag = 1;
                         DPL[z].Destroyer();//если не сработает - вызвать дестройер из деплишн. Короче всё работает, нужен нормальный дестройер
-                        //DPL.Clear();//еще раз видно, что лист не нужен, но пока так
+                        print("Count when destroying " + DPL.Count);//проверка
                     }
                     z += 1;
+                }
+            }
+        }
+        else if (summ < mineralsConsumptionPerHour)//Шаг 4, пункт 3. Для единственности Depletion для каждого Plant добавить флаг проверки (1,0)
+        {
+            if (flag == 0)//алгоритм саморегенарации/удаления Depletion
+            {
+                int z = 0;
+                foreach (Depletion iter in DPL)// Хз почему ошибка
+                {
+                    DPL[z].mineralsLack -= 2;
+                    if (DPL[z].mineralsLack <= 0)
+                    {
+                        flag = 1;
+                        DPL[z].Destroyer();//если не сработает - вызвать дестройер из деплишн. Короче всё работает, нужен нормальный дестройер
+                        print("Count when destroying " + DPL.Count);//проверка
+                    }
+                   z += 1;
                 }
             }
             if (flag == 1)
@@ -184,6 +214,8 @@ public class Plant : MonoBehaviour
                     {
                         if (iterObjectHit.GetComponent<Depletion>() != null)//выбираем только те объекты, которые имеют данный класс
                         {
+                            DPL.Clear();//очищаем лист, т.к. у одного растения - один деплишн в момент времени
+                            print("Count when finding a dep " + DPL.Count);//проверка
                             DPL.Add(iterObjectHit.GetComponent<Depletion>());//внесли очередной деп.
                         }
                     }
