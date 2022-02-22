@@ -11,7 +11,6 @@ public class Plant : MonoBehaviour
     //public float mineralsConsumptionRate;
     //public float waterConsumptionRate;
     //public float mineralsPerStage;
-    //public Depletion depletion;
     private DepletionCreator Dpc;//указание на класс 
 
     public float consumptionModifier;//надо менять в зависмости от растения. Решается разными префабами
@@ -30,7 +29,7 @@ public class Plant : MonoBehaviour
 
     int iEll = 0;//итератор для метода CreatingLists - общий, дабы считать листы корректно
     public float timeRemaining = 10; //время для питания растения
-    [SerializeField] private int flag = 1;//флаг для пункта 4.3
+    [SerializeField] private int deplitionFlag = 1;//флаг для пункта 4.3
     void Start()
     {
 
@@ -129,21 +128,7 @@ public class Plant : MonoBehaviour
                 summ += a;
                 print("new summ " + summ);
             }
-        }
-        if (flag == 0)//алгоритм саморегенарации/удаления Depletion11111111111111111
-        {
-            int z = 0;
-            foreach (Depletion iter in DPL)// Хз почему ошибка
-            {
-                DPL[z].mineralsLack -= 2;
-                if (DPL[z].mineralsLack <= 0)
-                {
-                    flag = 1;
-                    DPL[z].Destroyer();//если не сработает - вызвать дестройер из деплишн. Короче всё работает, нужен нормальный дестройер
-                    print("Count when destroying " + DPL.Count);//проверка
-                }
-                z += 1;
-            }
+            DepRegenarition();
         }
         else if (summ > 2 * mineralsConsumptionPerHour)//Шаг 4, пункт 2
         {
@@ -169,40 +154,12 @@ public class Plant : MonoBehaviour
                 j += 1;
             }
             summ = 0;
-            if (flag == 0)//алгоритм саморегенарации/удаления Depletion11111111111111111
-            {
-                int z = 0;
-                foreach (Depletion iter in DPL)// Хз почему ошибка
-                {
-                    DPL[z].mineralsLack -= 2;
-                    if (DPL[z].mineralsLack <= 0)
-                    {
-                        flag = 1;
-                        DPL[z].Destroyer();//если не сработает - вызвать дестройер из деплишн. Короче всё работает, нужен нормальный дестройер
-                        print("Count when destroying " + DPL.Count);//проверка
-                    }
-                    z += 1;
-                }
-            }
+            DepRegenarition();
         }
         else if (summ < mineralsConsumptionPerHour)//Шаг 4, пункт 3. Для единственности Depletion для каждого Plant добавить флаг проверки (1,0)
         {
-            if (flag == 0)//алгоритм саморегенарации/удаления Depletion
-            {
-                int z = 0;
-                foreach (Depletion iter in DPL)// Хз почему ошибка
-                {
-                    DPL[z].mineralsLack -= 2;
-                    if (DPL[z].mineralsLack <= 0)
-                    {
-                        flag = 1;
-                        DPL[z].Destroyer();//если не сработает - вызвать дестройер из деплишн. Короче всё работает, нужен нормальный дестройер
-                        print("Count when destroying " + DPL.Count);//проверка
-                    }
-                   z += 1;
-                }
-            }
-            if (flag == 1)
+            DepRegenarition();
+            if (deplitionFlag == 1)
             {
                 Dpc = GameObject.Find("DepletionHolder").GetComponent<DepletionCreator>();// попробовать перенсти в корень класса
                 Dpc.CreateDepletionSphere(rootsCenter, rootsRadius);
@@ -258,11 +215,29 @@ public class Plant : MonoBehaviour
                 summ += a;
                 print("new summ " + summ);
             }
-            flag = 0;//флаг для пункта 4.3
+            deplitionFlag = 0;//флаг для пункта 4.3
         }
         A.Clear();
         Fc.Clear();
         C.Clear();
+    }
+    private void DepRegenarition()//алгоритм регенерации Depletion
+    {
+        if (deplitionFlag == 0)//алгоритм саморегенарации/удаления Depletion
+        {
+            int z = 0;
+            foreach (Depletion iter in DPL)// Хз почему ошибка
+            {
+                DPL[z].mineralsLack -= 2;
+                if (DPL[z].mineralsLack <= 0)
+                {
+                    deplitionFlag = 1;
+                    DPL[z].Destroyer();//если не сработает - вызвать дестройер из деплишн. Короче всё работает, нужен нормальный дестройер
+                    print("Count when destroying " + DPL.Count);//проверка
+                }
+                z += 1;
+            }
+        }
     }
     // Update is called once per frame
     void Update()

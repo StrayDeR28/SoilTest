@@ -426,15 +426,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.02
+      value: 1.26
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.17
+      value: 6.19
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -16.01
+      value: -1.92
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -470,12 +470,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245073, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: mineralsReserve
-      value: 4.2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245073, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: MySoilFormationRef
       value: 
-      objectReference: {fileID: 1433461372}
+      objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245100, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_Name
       value: Fertilizer
@@ -518,8 +518,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57d0a51884382a145b4a92a500e392a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Soil: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  SoilPrefab: {fileID: 1433461371}
+  x: {fileID: 1433461372}
+  soilCenter: {x: 0, y: 0, z: 0}
+  soilRadius: 2
 --- !u!65 &1433461373
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -613,7 +614,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.39
+      value: 7.66
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalPosition.z

@@ -4,22 +4,37 @@ using UnityEngine;
 
 public class SoilFormation : MonoBehaviour
 {
-    public Mesh Soil;
-    public GameObject SoilPrefab;
+    //public GameObject SoilPrefab;
+    [SerializeField] private SoilFormation x;
+    [SerializeField] private Vector3 soilCenter;
+    [SerializeField] private float soilRadius;
     // Start is called before the first frame update
     void Start()
     {
         
     }
-
-    public void GetSoilFormationRef()
+    private void OnDrawGizmosSelected()//отрисовка OverlapSphere для rootsSystem
     {
-
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(soilCenter, soilRadius);
+    }
+    public SoilFormation GetSoilFormationRef(GameObject gameObject)
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(soilCenter, soilRadius);
+        foreach (Collider collider in hitColliders)
+        {
+            GameObject iterObjectHit = collider.gameObject;
+            if (iterObjectHit != null)
+            {
+                return x;
+            }
+        }
+        return null;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        soilCenter = transform.position;
     }
 }
