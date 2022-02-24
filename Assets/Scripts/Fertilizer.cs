@@ -5,7 +5,8 @@ using UnityEngine;
 public class Fertilizer : MonoBehaviour
 {
     public SoilFormation MySoilFormationRef;
-    private SoilFormation SF;
+    public SoilFormation anotherScript;
+    //private SoilFormation SF;
     public float mineralsReserve;
     public float radius;
 
@@ -24,11 +25,15 @@ public class Fertilizer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //SF = GameObject.Find("SoilFormation").GetComponent<SoilFormation>();фиксить
+        //anotherScript = GetComponent<SoilFormation>();
+        //SF = GameObject.Find("SoilFormation").GetComponent<SoilFormation>();
         //MySoilFormationRef = SF.GetSoilFormationRef(gameObject);
     }
     void Update()
     {
+        //MySoilFormationRef = anotherScript.GetSoilFormationRef(gameObject);
+        //SF = GameObject.Find("SoilFormation").GetComponent<SoilFormation>();
+        //MySoilFormationRef = SF.GetSoilFormationRef(gameObject);
         Destoyer();
     }
 }

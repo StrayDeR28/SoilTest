@@ -430,11 +430,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.19
+      value: 1.47
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.92
+      value: 1.01
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245072, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -467,6 +467,14 @@ PrefabInstance:
     - target: {fileID: 2307906450811245073, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: radius
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307906450811245073, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
+      propertyPath: anotherS
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307906450811245073, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
+      propertyPath: anotherScript
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245073, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: mineralsReserve
@@ -655,7 +663,7 @@ PrefabInstance:
     - target: {fileID: 2307906450811245073, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: MySoilFormationRef
       value: 
-      objectReference: {fileID: 1433461372}
+      objectReference: {fileID: 0}
     - target: {fileID: 2307906450811245100, guid: db76f918cf326d145830205a1a72e8c3, type: 3}
       propertyPath: m_Name
       value: Fertilizer (1)

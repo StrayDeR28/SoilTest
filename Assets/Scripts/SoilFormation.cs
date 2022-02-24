@@ -18,7 +18,7 @@ public class SoilFormation : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(soilCenter, soilRadius);
     }
-    public SoilFormation GetSoilFormationRef(GameObject gameObject)
+    public SoilFormation GetSoilFormationRef(GameObject gameObjectе)
     {
         Collider[] hitColliders = Physics.OverlapSphere(soilCenter, soilRadius);
         foreach (Collider collider in hitColliders)
@@ -26,7 +26,10 @@ public class SoilFormation : MonoBehaviour
             GameObject iterObjectHit = collider.gameObject;
             if (iterObjectHit != null)
             {
-                return x;
+                if (iterObjectHit == gameObjectе)
+                {
+                    return x;
+                }
             }
         }
         return null;
