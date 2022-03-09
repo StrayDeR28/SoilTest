@@ -2,30 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fertilizer : MonoBehaviour
+public class Decay : MonoBehaviour
 {
-    //[SerializeField] private SoilFormation MySoilFormationRef;//нужен ли тут объект класса SoilFormation ? Если да - создать лист
-    [SerializeField] private GameObject MySoilFormationRef;//если достаточно объекта (поидее да, т.к. используется только для сравнения -> можно просто число использовать)
-    [SerializeField] private LayerMask SoilLayer;
-    public float mineralsReserve;
-    public float radius;
-
-    [SerializeField] private float SFRadius;
-    private Vector3 SFCenter;
+    //private Collider m_ObjectCollider;
+    [SerializeField] private GameObject MySoilFormationRef;
+    [SerializeField] private LayerMask SoilLayer;//для SoilFormationRef
+    [SerializeField] private float SFRadius;//для SoilFormationRef
+    private Vector3 SFCenter;//для SoilFormationRef
     private int SFFlag = 0;
 
-    public Fertilizer(float newmineralsReserve, float newradius)
-    {
-        mineralsReserve = newmineralsReserve;
-        radius = newradius;
-    }
-    private void Destoyer()//поменять для оптимизации вызов функции: либо вставить её в Plant либо таймер свой
-    {
-        if (mineralsReserve < 0.25)
-        {
-            Destroy(gameObject, .5f);
-        }
-    }
+    [SerializeField] private float timeRemaining;
     private void OnDrawGizmosSelected()//отрисовка OverlapSphere для GetMySoilFormationRef()
     {
         Gizmos.color = Color.red;
@@ -42,8 +28,10 @@ public class Fertilizer : MonoBehaviour
                 if (iterObjectHit.GetComponent<SoilFormation>() != null)
                 {
                     MySoilFormationRef = iterObjectHit;//вариант с GameObject, не с об. класса SoilFormation
-                    //Destroy(GetComponent<Rigidbody>());//пока использовал для теста - работает
+                    Destroy(GetComponent<Rigidbody>());//пока использовал для теста - работает
+                    gameObject.GetComponent<SphereCollider>().isTrigger = true;//убираю коллайдер
                     SFFlag = 1;//пока ограничился одним, затем можно будет добавить логику для обновления привязки к слою земли.
+                    gameObject.AddComponent<Fertilizer>();//пока здесь, потом реализовать через такймер
                 }
             }
         }
@@ -53,13 +41,26 @@ public class Fertilizer : MonoBehaviour
     {
         
     }
+
+    // Update is called once per frame
     void Update()
     {
         SFCenter = transform.position;//для отрисовки сферы каста, затем убрать
-        Destoyer();
-        if (SFFlag == 0)//потом можно будет добавить
+        if (SFFlag == 0)//потом можно будет добавить смену этого флага
         {
             GetMySoilFormationRef();
         }
+        //if (SFFlag != 0)
+        //{
+          //  if (timeRemaining > 0)//таймер для получения растением удобрений
+          //  {
+          //      timeRemaining -= Time.deltaTime;
+          //  }
+          //  else
+          //  {
+          //      gameObject.AddComponent<Fertilizer>();
+          //  }
+        //}
+        
     }
 }

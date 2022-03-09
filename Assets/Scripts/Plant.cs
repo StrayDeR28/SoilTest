@@ -30,6 +30,10 @@ public class Plant : MonoBehaviour
     int iEll = 0;//итератор для метода CreatingLists - общий, дабы считать листы корректно
     public float timeRemaining = 10; //время для питания растения
     [SerializeField] private int deplitionFlag = 1;//флаг для пункта 4.3
+
+    [SerializeField] private GameObject MySoilFormationRef;//для SoilFormationRef
+    [SerializeField] private LayerMask SoilLayer;//для SoilFormationRef
+    private int SFFlag = 0;//для SoilFormationRef
     void Start()
     {
 
@@ -38,6 +42,23 @@ public class Plant : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(rootsCenter, rootsRadius);
+    }
+    private void GetMySoilFormationRef()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(rootsCenter, rootsRadius, SoilLayer);
+        foreach (Collider collider in hitColliders)
+        {
+            GameObject iterObjectHit = collider.gameObject;
+            if (iterObjectHit != null)
+            {
+                if (iterObjectHit.GetComponent<SoilFormation>() != null)
+                {
+                    MySoilFormationRef = iterObjectHit;//вариант с GameObject, не с об. класса SoilFormation
+                    //Destroy(GetComponent<Rigidbody>());//пока использовал для теста - работает
+                    SFFlag = 1;//пока ограничился одним, затем можно будет добавить логику для обновления привязки к слою земли.
+                }
+            }
+        }
     }
     private void CheckForFertilizers()//метод, служащий для поиска fertilizers (в нужный промежуток времени)
     {
@@ -226,13 +247,13 @@ public class Plant : MonoBehaviour
         if (deplitionFlag == 0)//алгоритм саморегенарации/удаления Depletion
         {
             int z = 0;
-            foreach (Depletion iter in DPL)// Хз почему ошибка
+            foreach (Depletion iter in DPL)
             {
                 DPL[z].mineralsLack -= 2;
-                if (DPL[z].mineralsLack <= 0)
+                if (DPL[z].mineralsLack <= 0.25)
                 {
                     deplitionFlag = 1;
-                    DPL[z].Destroyer();//если не сработает - вызвать дестройер из деплишн. Короче всё работает, нужен нормальный дестройер
+                    DPL[z].Destroyer();
                     print("Count when destroying " + DPL.Count);//проверка
                 }
                 z += 1;
@@ -243,6 +264,10 @@ public class Plant : MonoBehaviour
     void Update()
     {
         rootsCenter = transform.position;//в будущем убрать т.к. корни неподвижны, пока для теста
+        if (SFFlag == 0)//потом можно будет добавить
+        {
+            GetMySoilFormationRef();
+        }
         if (timeRemaining > 0)//таймер для получения растением удобрений
         {
             timeRemaining -= Time.deltaTime;
