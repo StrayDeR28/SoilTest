@@ -11,7 +11,6 @@ public class Plant : MonoBehaviour
     //public float mineralsConsumptionRate;
     //public float waterConsumptionRate;
     //public float mineralsPerStage;
-    //public Depletion depletion;
     private DepletionCreator Dpc;//указание на класс 
 
     public float consumptionModifier;//надо менять в зависмости от растения. Решается разными префабами
@@ -30,7 +29,11 @@ public class Plant : MonoBehaviour
 
     int iEll = 0;//итератор для метода CreatingLists - общий, дабы считать листы корректно
     public float timeRemaining = 10; //время для питания растения
-    [SerializeField] private int flag = 1;//флаг для пункта 4.3
+    [SerializeField] private int deplitionFlag = 1;//флаг для пункта 4.3
+
+    [SerializeField] private GameObject MySoilFormationRef;//для SoilFormationRef
+    [SerializeField] private LayerMask SoilLayer;//для SoilFormationRef
+    private int SFFlag = 0;//для SoilFormationRef
     void Start()
     {
 
@@ -39,6 +42,23 @@ public class Plant : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(rootsCenter, rootsRadius);
+    }
+    private void GetMySoilFormationRef()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(rootsCenter, rootsRadius, SoilLayer);
+        foreach (Collider collider in hitColliders)
+        {
+            GameObject iterObjectHit = collider.gameObject;
+            if (iterObjectHit != null)
+            {
+                if (iterObjectHit.GetComponent<SoilFormation>() != null)
+                {
+                    MySoilFormationRef = iterObjectHit;//вариант с GameObject, не с об. класса SoilFormation
+                    //Destroy(GetComponent<Rigidbody>());//пока использовал для теста - работает
+                    SFFlag = 1;//пока ограничился одним, затем можно будет добавить логику для обновления привязки к слою земли.
+                }
+            }
+        }
     }
     private void CheckForFertilizers()//метод, служащий для поиска fertilizers (в нужный промежуток времени)
     {
@@ -129,6 +149,7 @@ public class Plant : MonoBehaviour
                 summ += a;
                 print("new summ " + summ);
             }
+            DepRegenarition();
         }
         else if (summ > 2 * mineralsConsumptionPerHour)//Шаг 4, пункт 2
         {
@@ -154,25 +175,12 @@ public class Plant : MonoBehaviour
                 j += 1;
             }
             summ = 0;
+            DepRegenarition();
         }
         else if (summ < mineralsConsumptionPerHour)//Шаг 4, пункт 3. Для единственности Depletion для каждого Plant добавить флаг проверки (1,0)
         {
-            if (flag == 0)
-            {
-                int z = 0;
-                foreach (Depletion iter in DPL)// Хз почему ошибка
-                {
-                    DPL[z].mineralsLack -= 2;
-                    if (DPL[z].mineralsLack <= 0)
-                    {
-                        flag = 1;
-                        DPL[z].Destroyer();//если не сработает - вызвать дестройер из деплишн. Короче всё работает, нужен нормальный дестройер
-                        //DPL.Clear();//еще раз видно, что лист не нужен, но пока так
-                    }
-                    z += 1;
-                }
-            }
-            if (flag == 1)
+            DepRegenarition();
+            if (deplitionFlag == 1)
             {
                 Dpc = GameObject.Find("DepletionHolder").GetComponent<DepletionCreator>();// попробовать перенсти в корень класса
                 Dpc.CreateDepletionSphere(rootsCenter, rootsRadius);
@@ -184,6 +192,8 @@ public class Plant : MonoBehaviour
                     {
                         if (iterObjectHit.GetComponent<Depletion>() != null)//выбираем только те объекты, которые имеют данный класс
                         {
+                            DPL.Clear();//очищаем лист, т.к. у одного растения - один деплишн в момент времени
+                            print("Count when finding a dep " + DPL.Count);//проверка
                             DPL.Add(iterObjectHit.GetComponent<Depletion>());//внесли очередной деп.
                         }
                     }
@@ -226,16 +236,38 @@ public class Plant : MonoBehaviour
                 summ += a;
                 print("new summ " + summ);
             }
-            flag = 0;//флаг для пункта 4.3
+            deplitionFlag = 0;//флаг для пункта 4.3
         }
         A.Clear();
         Fc.Clear();
         C.Clear();
     }
+    private void DepRegenarition()//алгоритм регенерации Depletion
+    {
+        if (deplitionFlag == 0)//алгоритм саморегенарации/удаления Depletion
+        {
+            int z = 0;
+            foreach (Depletion iter in DPL)
+            {
+                DPL[z].mineralsLack -= 2;
+                if (DPL[z].mineralsLack <= 0.25)
+                {
+                    deplitionFlag = 1;
+                    DPL[z].Destroyer();
+                    print("Count when destroying " + DPL.Count);//проверка
+                }
+                z += 1;
+            }
+        }
+    }
     // Update is called once per frame
     void Update()
     {
         rootsCenter = transform.position;//в будущем убрать т.к. корни неподвижны, пока для теста
+        if (SFFlag == 0)//потом можно будет добавить
+        {
+            GetMySoilFormationRef();
+        }
         if (timeRemaining > 0)//таймер для получения растением удобрений
         {
             timeRemaining -= Time.deltaTime;

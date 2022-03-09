@@ -109,5 +109,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MySoilFormationRef: {fileID: 0}
+  SoilLayer:
+    serializedVersion: 2
+    m_Bits: 128
   mineralsReserve: 10
   radius: 2
+  SFRadius: 1

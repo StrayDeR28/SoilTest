@@ -110,7 +110,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minerals: 0
   mineralsConsumptionPerHour: 4
-  Dpc: {fileID: 0}
   consumptionModifier: 2
   connection: 0
   rootsCenter: {x: 0, y: 0, z: 0}
@@ -118,4 +117,12 @@ MonoBehaviour:
   rootsLayerMask:
     serializedVersion: 2
     m_Bits: 8
+  depletionLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   timeRemaining: 10
+  deplitionFlag: 1
+  MySoilFormationRef: {fileID: 0}
+  SoilLayer:
+    serializedVersion: 2
+    m_Bits: 128

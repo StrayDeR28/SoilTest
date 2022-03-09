@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3816590984222864559
+--- !u!1 &3939287488725942334
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2597021656371731958}
-  - component: {fileID: 6411721835117133365}
-  - component: {fileID: 4283881758464064118}
-  - component: {fileID: 3018844503247171595}
-  - component: {fileID: -4361931737715697624}
-  m_Layer: 6
-  m_Name: DepletionSphere
+  - component: {fileID: 3939287488725942308}
+  - component: {fileID: 3939287488725942309}
+  - component: {fileID: 3939287488725942306}
+  - component: {fileID: 3939287488725942307}
+  - component: {fileID: 3939287488725942304}
+  - component: {fileID: 3939287488725942305}
+  m_Layer: 0
+  m_Name: Apple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2597021656371731958
+--- !u!4 &3939287488725942308
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3816590984222864559}
+  m_GameObject: {fileID: 3939287488725942334}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -8.92, y: 4.267, z: -11.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6411721835117133365
+--- !u!33 &3939287488725942309
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3816590984222864559}
+  m_GameObject: {fileID: 3939287488725942334}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &4283881758464064118
+--- !u!23 &3939287488725942306
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3816590984222864559}
+  m_GameObject: {fileID: 3939287488725942334}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -61,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6c6f3824e9c293e4485a470614a19789, type: 2}
+  - {fileID: 2100000, guid: dc892c994da36bd45b8671652c23ab26, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83,39 +84,50 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &3018844503247171595
+--- !u!135 &3939287488725942307
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3816590984222864559}
+  m_GameObject: {fileID: 3939287488725942334}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-4361931737715697624
+--- !u!54 &3939287488725942304
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939287488725942334}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &3939287488725942305
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3816590984222864559}
+  m_GameObject: {fileID: 3939287488725942334}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3039cf7b18269614a82dd7461ecc249a, type: 3}
+  m_Script: {fileID: 11500000, guid: 853c5af0cb8937a48b92f78dc6930190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MySoilFormationRef: {fileID: 0}
-  mineralsLack: 0
-  lackMaximum: 5
   SoilLayer:
     serializedVersion: 2
     m_Bits: 128
   SFRadius: 0.5
-  FertilizerLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  timeRemaining: 10
+  timeRemaining: 5
