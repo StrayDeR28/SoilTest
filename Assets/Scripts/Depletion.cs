@@ -13,7 +13,6 @@ public class Depletion : MonoBehaviour
     private Vector3 SFCenter;//для SoilFormationRef
     private int SFFlag = 0;
 
-    int iEll = 0;//итератор для метода CreatingLists - общий, дабы считать листы корректно
     List<Fertilizer> F = new List<Fertilizer>();//создаем cписок пересекающихся с Depletion X fertilizers
     List<float> A = new List<float>();//создаем список значений доступных минералов
     [SerializeField] private LayerMask FertilizerLayer;
@@ -23,17 +22,16 @@ public class Depletion : MonoBehaviour
     {
         
     }
-    //private void DepRegenarition()////работает верно, но тем самым удаляет "префаб" для других деп 
-    //{
-     //   mineralsLack -= 2;
-      //  if (mineralsLack <= 0.25)
-      //  {
-      //      Destroyer();
-       // }
-    //}
-    private void CheckForFertilizers()
+    private void DepRegenarition()////работает верно, но тем самым удаляет "префаб" для других деп 
     {
-        iEll = 0;
+        mineralsLack -= 2;
+        if (mineralsLack <= 0.25)
+        {
+            Destroyer();
+        }
+    }
+    private void CheckForFertilizers()//Алгоритм регенерации DepletionSphere из Fertilizer-ов. Пока работает не плавно - регенериует на максимально возможное числи minerals
+    {
         F.Clear();
         Collider[] hitColliders = Physics.OverlapSphere(SFCenter, SFRadius, FertilizerLayer);
         foreach (var iter in hitColliders)
@@ -52,7 +50,6 @@ public class Depletion : MonoBehaviour
             for (int i = 0; i < F.Count; i++)//отсюда формируем список пересекщихся fert в данный промежуток времени
             {
                 CreatingLists(F[i]);//создаем List-ы данных для фертов
-                iEll += 1;//итератор для метода CreatingLists, значения совпадают с порядком эл. в списке
             }
         }
         else
@@ -137,15 +134,18 @@ public class Depletion : MonoBehaviour
         {
             GetMySoilFormationRef();
         }
-        if (timeRemaining > 0)//таймер для получения растением удобрений
+        if (SFFlag != 0)//Запускает таймер только при соприкосновении с SoilFormation, это позволяет логично настроить отдельное время для каждого SoilFormation
         {
-            timeRemaining -= Time.deltaTime;
-        }
-        else
-        {
-            //DepRegenarition();//работает верно, но тем самым удаляет "префаб" для других деп 
-            CheckForFertilizers();
-            timeRemaining = 10;
+            if (timeRemaining > 0)//таймер для получения деплишном удобрений
+            {
+                timeRemaining -= Time.deltaTime;
+            }
+            else
+            {
+                DepRegenarition();
+                CheckForFertilizers();
+                timeRemaining = 10;
+            }
         }
     }
 }

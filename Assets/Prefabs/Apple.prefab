@@ -130,4 +130,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   SFRadius: 0.5
-  timeRemaining: 5
+  FertilizerPrefab: {fileID: 2307906450811245100, guid: db76f918cf326d145830205a1a72e8c3, type: 3}

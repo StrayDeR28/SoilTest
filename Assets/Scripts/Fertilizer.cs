@@ -42,7 +42,6 @@ public class Fertilizer : MonoBehaviour
                 if (iterObjectHit.GetComponent<SoilFormation>() != null)
                 {
                     MySoilFormationRef = iterObjectHit;//вариант с GameObject, не с об. класса SoilFormation
-                    //Destroy(GetComponent<Rigidbody>());//пока использовал для теста - работает
                     SFFlag = 1;//пока ограничился одним, затем можно будет добавить логику для обновления привязки к слою земли.
                 }
             }

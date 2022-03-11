@@ -29,7 +29,7 @@ public class Plant : MonoBehaviour
 
     int iEll = 0;//итератор для метода CreatingLists - общий, дабы считать листы корректно
     public float timeRemaining = 10; //время для питания растения
-    [SerializeField] private int deplitionFlag = 1;//флаг для пункта 4.3
+    [SerializeField] private int firstDepletionSphere = 1;//флаг для пункта 4.3
 
     [SerializeField] private GameObject MySoilFormationRef;//для SoilFormationRef
     [SerializeField] private LayerMask SoilLayer;//для SoilFormationRef
@@ -149,7 +149,6 @@ public class Plant : MonoBehaviour
                 summ += a;
                 print("new summ " + summ);
             }
-            DepRegenarition();
         }
         else if (summ > 2 * mineralsConsumptionPerHour)//Шаг 4, пункт 2
         {
@@ -175,28 +174,40 @@ public class Plant : MonoBehaviour
                 j += 1;
             }
             summ = 0;
-            DepRegenarition();
         }
         else if (summ < mineralsConsumptionPerHour)//Шаг 4, пункт 3. Для единственности Depletion для каждого Plant добавить флаг проверки (1,0)
         {
-            DepRegenarition();
-            if (deplitionFlag == 1)
+            if (firstDepletionSphere == 1)//КОСТЫЛЬ - сначаласоздаём первый деплишн один раз
             {
                 Dpc = GameObject.Find("DepletionHolder").GetComponent<DepletionCreator>();// попробовать перенсти в корень класса
                 Dpc.CreateDepletionSphere(rootsCenter, rootsRadius);
-                Collider[] hitColliders = Physics.OverlapSphere(rootsCenter, rootsRadius, depletionLayerMask);// оверлап сфера для поиска деплишн
-                foreach (var iter in hitColliders)
+                firstDepletionSphere = 0;
+            } 
+            Collider[] hitColliders = Physics.OverlapSphere(rootsCenter, rootsRadius, depletionLayerMask);// оверлап сфера для поиска деплишн
+            foreach (var iter in hitColliders)
+            {
+                GameObject iterObjectHit = iter.gameObject;
+                if (iterObjectHit != null)
                 {
-                    GameObject iterObjectHit = iter.gameObject;
-                    if (iterObjectHit != null)
+                    if (iterObjectHit.GetComponent<Depletion>() != null)//выбираем только те объекты, которые имеют данный класс
                     {
-                        if (iterObjectHit.GetComponent<Depletion>() != null)//выбираем только те объекты, которые имеют данный класс
-                        {
-                            DPL.Clear();//очищаем лист, т.к. у одного растения - один деплишн в момент времени
-                            print("Count when finding a dep " + DPL.Count);//проверка
-                            DPL.Add(iterObjectHit.GetComponent<Depletion>());//внесли очередной деп.
-                        }
+                        DPL.Clear();//очищаем лист, т.к. у одного растения - один деплишн в момент времени. НАДО БУДЕТ УБРАТЬ ЛИСТЫ, хотя работает и так
+                        print("Count when finding a dep " + DPL.Count);//проверка
+                        DPL.Add(iterObjectHit.GetComponent<Depletion>());//внесли очередной деп.
                     }
+                }
+            }
+            if (hitColliders.Length <= 0)//ЭТО ПРОДОЛЖЕНИЕ КОСТЫЛЯ - при исчезновении деплишна - создаём новый и еще раз создаем сферу
+            {
+                Dpc = GameObject.Find("DepletionHolder").GetComponent<DepletionCreator>();// попробовать перенсти в корень класса
+                Dpc.CreateDepletionSphere(rootsCenter, rootsRadius);
+                Collider[] hitColliders2 = Physics.OverlapSphere(rootsCenter, rootsRadius, depletionLayerMask);// оверлап сфера для поиска деплишн
+                foreach (var iter2 in hitColliders2)
+                {
+                    GameObject iterObjectHit2 = iter2.gameObject;
+                    DPL.Clear();//очищаем лист, т.к. у одного растения - один деплишн в момент времени. НАДО БУДЕТ УБРАТЬ ЛИСТЫ, хотя работает и так
+                    print("Count when finding a dep " + DPL.Count);//проверка
+                    DPL.Add(iterObjectHit2.GetComponent<Depletion>());//внесли очередной деп.
                 }
             }
             int i = 0;
@@ -236,29 +247,10 @@ public class Plant : MonoBehaviour
                 summ += a;
                 print("new summ " + summ);
             }
-            deplitionFlag = 0;//флаг для пункта 4.3
         }
         A.Clear();
         Fc.Clear();
         C.Clear();
-    }
-    private void DepRegenarition()//алгоритм регенерации Depletion
-    {
-        if (deplitionFlag == 0)//алгоритм саморегенарации/удаления Depletion
-        {
-            int z = 0;
-            foreach (Depletion iter in DPL)
-            {
-                DPL[z].mineralsLack -= 2;
-                if (DPL[z].mineralsLack <= 0.25)
-                {
-                    deplitionFlag = 1;
-                    DPL[z].Destroyer();
-                    print("Count when destroying " + DPL.Count);//проверка
-                }
-                z += 1;
-            }
-        }
     }
     // Update is called once per frame
     void Update()

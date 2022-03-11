@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class Decay : MonoBehaviour
 {
-    //private Collider m_ObjectCollider;
     [SerializeField] private GameObject MySoilFormationRef;
     [SerializeField] private LayerMask SoilLayer;//для SoilFormationRef
     [SerializeField] private float SFRadius;//для SoilFormationRef
     private Vector3 SFCenter;//для SoilFormationRef
     private int SFFlag = 0;
 
-    [SerializeField] private float timeRemaining;
+    [SerializeField] private GameObject FertilizerPrefab;
     private void OnDrawGizmosSelected()//отрисовка OverlapSphere для GetMySoilFormationRef()
     {
         Gizmos.color = Color.red;
@@ -28,10 +27,8 @@ public class Decay : MonoBehaviour
                 if (iterObjectHit.GetComponent<SoilFormation>() != null)
                 {
                     MySoilFormationRef = iterObjectHit;//вариант с GameObject, не с об. класса SoilFormation
-                    Destroy(GetComponent<Rigidbody>());//пока использовал для теста - работает
-                    gameObject.GetComponent<SphereCollider>().isTrigger = true;//убираю коллайдер
                     SFFlag = 1;//пока ограничился одним, затем можно будет добавить логику для обновления привязки к слою земли.
-                    gameObject.AddComponent<Fertilizer>();//пока здесь, потом реализовать через такймер
+                    Invoke("AddFertLogic", 5f);//Станет фертилайзером спустя ... сек. лежания на земле
                 }
             }
         }
@@ -40,6 +37,12 @@ public class Decay : MonoBehaviour
     void Start()
     {
         
+    }
+    private void AddFertLogic()
+    {
+        Vector3 position = transform.position;
+        Instantiate(FertilizerPrefab, position, Quaternion.identity);
+        Destroy(gameObject);
     }
 
     // Update is called once per frame
@@ -50,17 +53,5 @@ public class Decay : MonoBehaviour
         {
             GetMySoilFormationRef();
         }
-        //if (SFFlag != 0)
-        //{
-          //  if (timeRemaining > 0)//таймер для получения растением удобрений
-          //  {
-          //      timeRemaining -= Time.deltaTime;
-          //  }
-          //  else
-          //  {
-          //      gameObject.AddComponent<Fertilizer>();
-          //  }
-        //}
-        
     }
 }
