@@ -196,18 +196,23 @@ public class Plant : MonoBehaviour
                         DPL.Add(iterObjectHit.GetComponent<Depletion>());//внесли очередной деп.
                     }
                 }
-            }
-            if (hitColliders.Length <= 0)//ЭТО ПРОДОЛЖЕНИЕ КОСТЫЛЯ - при исчезновении деплишна - создаём новый и еще раз создаем сферу
-            {
-                Dpc = GameObject.Find("DepletionHolder").GetComponent<DepletionCreator>();// попробовать перенсти в корень класса
-                Dpc.CreateDepletionSphere(rootsCenter, rootsRadius);
-                Collider[] hitColliders2 = Physics.OverlapSphere(rootsCenter, rootsRadius, depletionLayerMask);// оверлап сфера для поиска деплишн
-                foreach (var iter2 in hitColliders2)
+                else//ЭТО ПРОДОЛЖЕНИЕ КОСТЫЛЯ - при исчезновении деплишна - создаём новый и еще раз создаем сферу
                 {
-                    GameObject iterObjectHit2 = iter2.gameObject;
-                    DPL.Clear();//очищаем лист, т.к. у одного растения - один деплишн в момент времени. НАДО БУДЕТ УБРАТЬ ЛИСТЫ, хотя работает и так
-                    print("Count when finding a dep " + DPL.Count);//проверка
-                    DPL.Add(iterObjectHit2.GetComponent<Depletion>());//внесли очередной деп.
+                    Dpc = GameObject.Find("DepletionHolder").GetComponent<DepletionCreator>();// попробовать перенсти в корень класса
+                    Dpc.CreateDepletionSphere(rootsCenter, rootsRadius);
+                    Collider[] hitColliders2 = Physics.OverlapSphere(rootsCenter, rootsRadius, depletionLayerMask);// оверлап сфера для поиска деплишн
+                    foreach (var iter2 in hitColliders2)
+                    {
+                        GameObject iterObjectHit2 = iter2.gameObject;
+                        if (iterObjectHit2 != null)
+                        {
+                            DPL.Clear();//очищаем лист, т.к. у одного растения - один деплишн в момент времени. НАДО БУДЕТ УБРАТЬ ЛИСТЫ, хотя работает и так
+                            //print("Count when finding a dep " + DPL.Count);//проверка
+                            DPL.Add(iterObjectHit2.GetComponent<Depletion>());//внесли очередной деп.
+                            print("Ver 2" + DPL.Count);
+                        }
+                    }
+                    
                 }
             }
             int i = 0;
@@ -216,6 +221,7 @@ public class Plant : MonoBehaviour
                 if (DPL[i].lackMaximum >= mineralsConsumptionPerHour + DPL[i].mineralsLack)
                 {
                     minerals += mineralsConsumptionPerHour;
+                    print("Podschet v plante"+minerals);
                     if ((mineralsConsumptionPerHour - summ) <= DPL[i].lackMaximum)
                     {
                         DPL[i].mineralsLack += (mineralsConsumptionPerHour - summ);

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2307906450811245101}
   - component: {fileID: 2307906450811245073}
   m_Layer: 3
-  m_Name: Fertilizer
+  m_Name: FertilizerPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -237,7 +237,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4361931737715697624, guid: 286832836c2fc9246bbe73536a5d632e, type: 3}
       propertyPath: mineralsLack
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2597021656371731958, guid: 286832836c2fc9246bbe73536a5d632e, type: 3}
       propertyPath: m_RootOrder
@@ -401,7 +401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 903550863f6e8534481e30f9f2cbcda9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DSPrefab: {fileID: 3816590984222864559, guid: 286832836c2fc9246bbe73536a5d632e, type: 3}
+  DepSpherePrefab: {fileID: 3816590984222864559, guid: 286832836c2fc9246bbe73536a5d632e, type: 3}
 --- !u!4 &1116907401
 Transform:
   m_ObjectHideFlags: 0
