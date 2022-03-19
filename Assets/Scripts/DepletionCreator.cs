@@ -6,7 +6,7 @@ public class DepletionCreator : MonoBehaviour
 {
     [SerializeField] private GameObject DepSpherePrefab;
 
-    public void CreateDepletionSphere(Vector3 newCenterOfDep, float newRadiusOfDep)
+    public void CreateDepletionSphere(Vector3 newCenterOfDep, float newRadiusOfDep) //newRadiusOfDep никуда не идёт. Напомню так же что сюда нужно сунуть логику с присвоением почвы SF
     {
         Instantiate(DepSpherePrefab, newCenterOfDep, Quaternion.identity);
     }

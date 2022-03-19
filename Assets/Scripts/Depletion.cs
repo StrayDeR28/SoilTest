@@ -6,15 +6,15 @@ public class Depletion : MonoBehaviour
 {
     [SerializeField] private GameObject MySoilFormationRef;
     [SerializeField] public float mineralsLack;
-    [SerializeField] public float lackMaximum;//будет висеть на объекте на сцене, с которого копировать будем
+    [SerializeField] public float lackMaximum; //будет висеть на объекте на сцене, с которого копировать будем
 
-    [SerializeField] private LayerMask SoilLayer;//для SoilFormationRef
-    [SerializeField] private float SFRadius;//для SoilFormationRef
-    private Vector3 SFCenter;//для SoilFormationRef
+    [SerializeField] private LayerMask SoilLayer; //для SoilFormationRef
+    [SerializeField] private float SFRadius; //для SoilFormationRef
+    private Vector3 SFCenter; //для SoilFormationRef
     private int SFFlag = 0;
 
-    List<Fertilizer> F = new List<Fertilizer>();//создаем cписок пересекающихся с Depletion X fertilizers
-    List<float> A = new List<float>();//создаем список значений доступных минералов
+    List<Fertilizer> F = new List<Fertilizer>(); //создаем cписок пересекающихся с Depletion X fertilizers
+    List<float> A = new List<float>(); //создаем список значений доступных минералов. Неправильные названия. Сделай их говорящими, а не А, F
     [SerializeField] private LayerMask FertilizerLayer;
     [SerializeField] private float timeRemaining = 10;
     // Start is called before the first frame update
@@ -22,17 +22,20 @@ public class Depletion : MonoBehaviour
     {
         
     }
-    private void DepRegenarition()////работает верно, но тем самым удаляет "префаб" для других деп 
+
+    private void DepRegenarition() 
     {
+        //Добавить зависимость регенерации от объема нехватки.
         mineralsLack -= 2;
         if (mineralsLack <= 0.25)
         {
             Destroyer();
         }
     }
+
     private void CheckForFertilizers()//Алгоритм регенерации DepletionSphere из Fertilizer-ов. Пока работает не плавно - регенериует на максимально возможное числи minerals
     {
-        F.Clear();
+        F = new List<Fertilizer>();
         Collider[] hitColliders = Physics.OverlapSphere(SFCenter, SFRadius, FertilizerLayer);
         foreach (var iter in hitColliders)
         {
@@ -54,9 +57,10 @@ public class Depletion : MonoBehaviour
         }
         else
         {
-            FertilizingAlgorithm();
+            FertilizingAlgorithm(); // не ясно зачем это тут
         }
     }
+
     public void CreatingLists(Fertilizer x)//алгоритм заполнения списков удобрений (fertilizers)
     {
         if (mineralsLack >= x.mineralsReserve)
@@ -65,19 +69,22 @@ public class Depletion : MonoBehaviour
         }
         else
         {
-            A.Add(mineralsLack);//совпадает с значением из C, можно переписать
+            A.Add(mineralsLack); // совпадает с значением из C, можно переписать
         }
-        if (A.Count == F.Count)//когда заполним наши List-ы данных для всех пересеченных fert., вызовём алгоритм, считающий потребление minerals и тд
+        if (A.Count == F.Count) // когда заполним наши List-ы данных для всех пересеченных fert., вызовём алгоритм, считающий потребление minerals и тд
         {
-            FertilizingAlgorithm();
+            FertilizingAlgorithm(); // Вызывать не тут ^ Лишняя проверка
         }
     }
-    private void FertilizingAlgorithm()//алгоритм потребления Depletion удобрений (mierals)
+
+    // не учтён конкшен
+    // равномерно распределять нагрузку по потреблению удобрений
+    private void FertilizingAlgorithm() // алгоритм потребления Depletion удобрений (mierals)
     {
         int i = 0;
         foreach (Fertilizer iter in F)
         {
-            if (A[i] - mineralsLack < 0)//простая логика для поочередного использования удобрений
+            if (A[i] - mineralsLack < 0) // простая логика для поочередного использования удобрений
             {
                 mineralsLack -= A[i];
                 F[i].mineralsReserve -= A[i];
@@ -88,9 +95,11 @@ public class Depletion : MonoBehaviour
             }
             else
             {
+                
                 F[i].mineralsReserve -= mineralsLack;
                 A[i] -= mineralsLack;
                 mineralsLack = 0;
+                //break
             }
             i += 1;
         }
@@ -100,15 +109,18 @@ public class Depletion : MonoBehaviour
         }
         A.Clear();
     }
-    public void Destroyer()//поменять для оптимизации вызов функции: либо вставить её в Plant либо таймер свой
+
+    public void Destroyer()//поменять для оптимизации вызов функции: либо вставить её в Plant либо таймер свой // Бесполезная функция) лишние строчки
     {
         Destroy(gameObject, .5f);
     }
+
     private void OnDrawGizmosSelected()//отрисовка OverlapSphere для GetMySoilFormationRef()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(SFCenter, SFRadius);
     }
+
     private void GetMySoilFormationRef()
     {
         Collider[] hitColliders = Physics.OverlapSphere(SFCenter, SFRadius, SoilLayer);
@@ -126,13 +138,20 @@ public class Depletion : MonoBehaviour
             }
         }
     }
+
+    //public void SetSoilFormation(GameObject SF)//сделать как сеттер для конструктора деплишн
+    //{
+    //    MySoilFormationRef = SF;
+    //}
+
+
     // Update is called once per frame
     void Update()
     {
         SFCenter = transform.position;//для отрисовки сферы каста, затем убрать
         if (SFFlag == 0)//потом можно будет добавить
         {
-            GetMySoilFormationRef();
+            GetMySoilFormationRef(); // Лучше убарть
         }
         if (SFFlag != 0)//Запускает таймер только при соприкосновении с SoilFormation, это позволяет логично настроить отдельное время для каждого SoilFormation
         {

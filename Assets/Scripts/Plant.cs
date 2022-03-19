@@ -34,10 +34,7 @@ public class Plant : MonoBehaviour
     [SerializeField] private GameObject MySoilFormationRef;//для SoilFormationRef
     [SerializeField] private LayerMask SoilLayer;//для SoilFormationRef
     private int SFFlag = 0;//для SoilFormationRef
-    void Start()
-    {
 
-    }
     private void OnDrawGizmosSelected()//отрисовка OverlapSphere для rootsSystem
     {
         Gizmos.color = Color.red;
@@ -60,11 +57,12 @@ public class Plant : MonoBehaviour
             }
         }
     }
+
     private void CheckForFertilizers()//метод, служащий для поиска fertilizers (в нужный промежуток времени)
     {
         iEll = 0;
-        F.Clear();
-        Collider[] hitColliders = Physics.OverlapSphere(rootsCenter, rootsRadius, rootsLayerMask);//массив коллайдеров, пересёкщихся с OverlapSphere. По-идее это переменная rootsSystem
+        F.Clear(); // the same
+        Collider[] hitColliders = Physics.OverlapSphere(rootsCenter, rootsRadius, rootsLayerMask); //массив коллайдеров, пересёкщихся с OverlapSphere. По-идее это переменная rootsSystem
         foreach (var iter in hitColliders)
         {
             GameObject iterObjectHit = iter.gameObject;
@@ -88,12 +86,16 @@ public class Plant : MonoBehaviour
         }
         else
         {
-            FertilizingAlgorithm();
+            FertilizingAlgorithm(); //то же самое как в деплешоне
         }
     }
+
+    // балансировка потребления из разных источников
     public void CreatingLists(Fertilizer x)//алгоритм заполнения списков удобрений (fertilizers)
     {
-        connection = Mathf.Sqrt(Mathf.Pow((rootsCenter.x - x.transform.position.x), 2) + Mathf.Pow((rootsCenter.y - x.transform.position.y), 2) + Mathf.Pow((rootsCenter.z - x.transform.position.z), 2)) - x.radius - rootsRadius;
+        //connection = Mathf.Sqrt(Mathf.Pow((rootsCenter.x - x.transform.position.x), 2) + Mathf.Pow((rootsCenter.y - x.transform.position.y), 2) + Mathf.Pow((rootsCenter.z - x.transform.position.z), 2)) - x.radius - rootsRadius;
+        connection = Vector3.Distance(rootsCenter, x.transform.position);
+
         if (connection < 0)
         {
             connection = Mathf.Abs(connection);
@@ -104,6 +106,7 @@ public class Plant : MonoBehaviour
         }
         Fc.Add(connection);//заполняем список connection
         print("connection " + Fc[iEll]);//проверка, удалить в фин. версии
+        // Ограничить consumption сверху
         C.Add(connection * consumptionModifier);//создаем список объёма потребления для растения X
         print("multiplied connection " + C[iEll]);//проверка, удалить в фин. версии
         float reserve = x.mineralsReserve;
@@ -121,6 +124,7 @@ public class Plant : MonoBehaviour
             FertilizingAlgorithm();
         }
     }
+
     private void FertilizingAlgorithm()//алгоритм потребления растения удобрений (mierals)
     {
         float summ = 0;
@@ -175,6 +179,8 @@ public class Plant : MonoBehaviour
             }
             summ = 0;
         }
+
+        // если поле с деплишном пустое - создаем новый деплишн, иначе работает с тем который есть.
         else if (summ < mineralsConsumptionPerHour)//Шаг 4, пункт 3. Для единственности Depletion для каждого Plant добавить флаг проверки (1,0)
         {
             if (firstDepletionSphere == 1)//КОСТЫЛЬ - сначаласоздаём первый деплишн один раз
@@ -215,6 +221,8 @@ public class Plant : MonoBehaviour
                     
                 }
             }
+
+            // Здесь много нужно переделать. 
             int i = 0;
             foreach (Depletion itr in DPL)//Вычисления для шага 4.3
             {
@@ -272,7 +280,7 @@ public class Plant : MonoBehaviour
         }
         else
         {
-            CheckForFertilizers();
+            CheckForFertilizers(); // Лучше названание вроде ProccedFertilizerAlgoritm
             timeRemaining = 10;
         }
     }
